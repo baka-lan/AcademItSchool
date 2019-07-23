@@ -1,3 +1,8 @@
+package ru.academits.bakalan.range.main;
+
+import ru.academits.bakalan.range.Range;
+
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
@@ -25,9 +30,9 @@ public class Main {
         }
 
         System.out.println("Объединение:");
-        System.out.println(Range.arrayToString(someRange.getUnion(anotherRange)));
+        System.out.println(Arrays.toString(someRange.getUnion(anotherRange)));
 
         System.out.println("Разница:");
-        System.out.println(Range.arrayToString(someRange.getDifference(anotherRange)));
+        System.out.println(Arrays.toString(someRange.getDifference(anotherRange)));
     }
 }
