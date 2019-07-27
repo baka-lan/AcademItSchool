@@ -1,22 +1,25 @@
-package ru.academits.bakalan.shapes;
+package ru.academits.bakalan.shapes.main;
 
-import ru.academits.bakalan.shapes.shapes.*;
+import ru.academits.bakalan.shapes.classes.*;
+import ru.academits.bakalan.shapes.interfaces.Shape;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
 
 public class Main {
-    static Shape getFirstAreaShape(ArrayList<Shape> shapes) {
-        shapes.sort(new SortByArea().reversed());
+    private static Shape getFirstAreaShape(ArrayList<Shape> shapes) {
+        ArrayList<Shape> s = new ArrayList<>(shapes);
 
-        return shapes.get(0);
+        s.sort(new SortByArea().reversed());
+
+        return s.get(0);
     }
 
-    static Shape getSecondPerimeterShape(ArrayList<Shape> shapes) {
-        shapes.sort(new SortByPerimeter().reversed());
+    private static Shape getSecondPerimeterShape(ArrayList<Shape> shapes) {
+        ArrayList<Shape> s = new ArrayList<>(shapes);
 
-        return shapes.get(1);
+        s.sort(new SortByPerimeter().reversed());
+
+        return s.get(1);
     }
 
     public static void main(String[] args) {

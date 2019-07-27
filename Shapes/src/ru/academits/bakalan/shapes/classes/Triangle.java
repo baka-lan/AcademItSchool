@@ -1,4 +1,6 @@
-package ru.academits.bakalan.shapes.shapes;
+package ru.academits.bakalan.shapes.classes;
+
+import ru.academits.bakalan.shapes.interfaces.Shape;
 
 public class Triangle implements Shape {
     private double x1;
@@ -43,6 +45,31 @@ public class Triangle implements Shape {
 
     @Override
     public String toString() {
-        return "Triangle (x1 = " + x1 + "; y1 = " + y1 + "; x2 = " + x2 + "; y2 = " + y2 + "; x3 = " + x3 + "; y3 = " + y3 + ")";
+        return "Triangle (x1: " + x1 + ", y1: " + y1 + ", x2: " + x2 + ", y2: " + y2 + ", x3: " + x3 + ", y3: " + y3 + ")";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+        if ((o == null) || o.getClass() != this.getClass()) {
+            return false;
+        }
+        Triangle p = (Triangle) o;
+        return (x1 == p.x1 && y1 == p.y1 && x2 == p.x2 && y2 == p.y2 && x3 == p.x3 && y3 == p.y3);
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 7;
+        int hash = 1;
+        hash = prime*hash + Double.hashCode(x1);
+        hash = prime*hash + Double.hashCode(y1);
+        hash = prime*hash + Double.hashCode(x2);
+        hash = prime*hash + Double.hashCode(y2);
+        hash = prime*hash + Double.hashCode(x3);
+        hash = prime*hash + Double.hashCode(y3);
+        return hash;
     }
 }

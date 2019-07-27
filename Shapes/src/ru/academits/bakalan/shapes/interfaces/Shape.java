@@ -1,4 +1,4 @@
-package ru.academits.bakalan.shapes.shapes;
+package ru.academits.bakalan.shapes.interfaces;
 
 public interface Shape {
     public double getWidth();

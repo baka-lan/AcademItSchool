@@ -1,4 +1,6 @@
-package ru.academits.bakalan.shapes.shapes;
+package ru.academits.bakalan.shapes.classes;
+
+import ru.academits.bakalan.shapes.interfaces.Shape;
 
 import java.util.Comparator;
 
