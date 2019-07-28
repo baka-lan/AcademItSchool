@@ -9,7 +9,7 @@ public class Main {
     private static Shape getFirstAreaShape(ArrayList<Shape> shapes) {
         ArrayList<Shape> s = new ArrayList<>(shapes);
 
-        s.sort(new SortByArea().reversed());
+        s.sort(new AreaComparator().reversed());
 
         return s.get(0);
     }
@@ -17,7 +17,7 @@ public class Main {
     private static Shape getSecondPerimeterShape(ArrayList<Shape> shapes) {
         ArrayList<Shape> s = new ArrayList<>(shapes);
 
-        s.sort(new SortByPerimeter().reversed());
+        s.sort(new PerimeterComparator().reversed());
 
         return s.get(1);
     }
