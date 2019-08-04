@@ -1,7 +1,8 @@
 package ru.academits.bakalan.vector;
 
+import java.util.Arrays;
+
 public class Vector {
-    private int n;
     private double[] components;
 
     public Vector(int n) {
@@ -9,15 +10,11 @@ public class Vector {
             throw new IllegalArgumentException("n must be > 0");
         }
 
-        this.n = n;
-        this.components = new double[n];
+        components = new double[n];
     }
 
     public Vector(Vector vector) {
-        n = vector.n;
-        components = new double[n];
-
-        System.arraycopy(vector.components, 0, components, 0, n);
+        components = Arrays.copyOf(vector.components, vector.getSize());
     }
 
     public Vector(double[] components) {
@@ -25,10 +22,7 @@ public class Vector {
             throw new IllegalArgumentException("double[].length must be > 0");
         }
 
-        n = components.length;
-        this.components = new double[n];
-
-        System.arraycopy(components, 0, this.components, 0, n);
+        this.components = Arrays.copyOf(components, components.length);
     }
 
     public Vector(int n, double[] components) {
@@ -40,62 +34,32 @@ public class Vector {
             throw new IllegalArgumentException("double[].length must be > 0");
         }
 
-        this.n = n;
-        this.components = new double[n];
-
-        System.arraycopy(components, 0, this.components, 0, Math.min(n, components.length));
-
-        if (n > components.length) {
-            for (int i = components.length; i < n; i++) {
-                this.components[i] = 0;
-            }
-        }
+        this.components = Arrays.copyOf(components, n);
     }
 
     public int getSize() {
-        return n;
-    }
-
-    private void increaseSize(int newSize) {
-        if (newSize <= n) {
-            throw new IllegalArgumentException("new size must be larger than old");
-        }
-
-        double[] temporaryComponents = new double[n];
-        System.arraycopy(components, 0, temporaryComponents, 0, n);
-
-        int marker = n;
-        n = newSize;
-
-        components = new double[n];
-        System.arraycopy(temporaryComponents, 0, components, 0, marker);
-        for (int i = marker; i < n; i++) {
-            components[i] = 0;
-        }
+        return components.length;
     }
 
     public double getComponent(int index) {
-        if (index < 0 || index > n) {
-            throw new IllegalArgumentException("index must be from zero to vector size");
+        if (index < 0 || index >= getSize()) {
+            throw new IndexOutOfBoundsException("index must be in range of vector");
         }
 
         return components[index];
     }
 
     public void setComponent(int index, double newValue) {
-        if (index < 0 || index > n) {
-            throw new IllegalArgumentException("index must be from zero to vector size");
+        if (index < 0 || index >= getSize()) {
+            throw new IndexOutOfBoundsException("index must be in range of vector");
         }
 
         components[index] = newValue;
     }
 
-    public double[] getComponents() {
-        return components;
-    }
-
     public double getLength() {
         double sum = 0;
+        int n = getSize();
         for (int i = 0; i < n; i++) {
             sum += components[i] * components[i];
         }
@@ -103,89 +67,62 @@ public class Vector {
     }
 
     public void plus(Vector v) {
-        if (n >= v.n) {
-            for (int i = 0; i < v.n; i++) {
-                components[i] += v.components[i];
-            }
-        } else {
-            this.increaseSize(v.n);
-            for (int i = 0; i < n; i++) {
-                components[i] += v.components[i];
-            }
+        int n = getSize();
+        int vn = v.getSize();
+
+        for (int i = 0; i < (n >= vn ? vn : n); i++) {
+            components[i] += v.components[i];
         }
     }
 
     public void minus(Vector v) {
-        if (n >= v.n) {
-            for (int i = 0; i < v.n; i++) {
-                components[i] -= v.components[i];
-            }
-        } else {
-            this.increaseSize(v.n);
-            for (int i = 0; i < n; i++) {
-                components[i] -= v.components[i];
-            }
+        int n = getSize();
+        int vn = v.getSize();
+
+        for (int i = 0; i < (n >= vn ? vn : n); i++) {
+            components[i] -= v.components[i];
         }
     }
 
     public void multiplyToNumber(double x) {
+        int n = getSize();
+
         for (int i = 0; i < n; i++) {
             components[i] *= x;
         }
     }
 
     public void invert() {
+        multiplyToNumber(-1);
+    }
+
+    public static Vector sum(Vector v1, Vector v2) {
+        Vector vector = new Vector(Math.max(v1.getSize(), v2.getSize()));
+
+        vector.plus(v1);
+        vector.plus(v2);
+
+        return vector;
+    }
+
+    public static Vector difference(Vector v1, Vector v2) {
+        Vector vector = new Vector(Math.max(v1.getSize(), v2.getSize()));
+
+        vector.plus(v1);
+        vector.minus(v2);
+
+        return vector;
+    }
+
+    public static double dotProduct(Vector v1, Vector v2) {
+        double sum = 0;
+        int n = Math.min(v1.getSize(), v2.getSize());
+
         for (int i = 0; i < n; i++) {
-            components[i] *= -1;
-        }
-    }
-
-    public static Vector sumOfTwoVectors(Vector v1, Vector v2) {
-        Vector vector = new Vector(Math.max(v1.n, v2.n));
-
-        if (v1.n >= v2.n) {
-            for (int i = 0; i < v2.n; i++) {
-                vector.components[i] = v1.components[i] + v2.components[i];
-            }
-            System.arraycopy(v1.components, v2.n, vector.components, v2.n, v1.n - v2.n);
-        } else {
-            for (int i = 0; i < v1.n; i++) {
-                vector.components[i] = v1.components[i] + v2.components[i];
-            }
-            System.arraycopy(v2.components, v1.n, vector.components, v1.n, v2.n - v1.n);
+            sum += v1.components[i] * v2.components[i];
         }
 
-        return vector;
-    }
-
-    public static Vector differenceOfTwoVectors(Vector v1, Vector v2) {
-        Vector vector = new Vector(Math.max(v1.n, v2.n));
-
-        if (v1.n >= v2.n) {
-            for (int i = 0; i < v2.n; i++) {
-                vector.components[i] = v1.components[i] - v2.components[i];
-            }
-            System.arraycopy(v1.components, v2.n, vector.components, v2.n, v1.n - v2.n);
-        } else {
-            for (int i = 0; i < v1.n; i++) {
-                vector.components[i] = v1.components[i] + v2.components[i];
-            }
-            for (int i = v1.n; i < v2.n; i++) {
-                vector.components[i] -= v2.components[i];
-            }
-        }
-
-        return vector;
-    }
-
-    public static Vector compositionOfTwoVectors(Vector v1, Vector v2) {
-        Vector vector = new Vector(Math.max(v1.n, v2.n));
-
-        for (int i = 0; i < Math.min(v1.n, v2.n); i++) {
-            vector.components[i] = v1.components[i] * v2.components[i];
-        }
-
-        return vector;
+        return sum;
     }
 
     @Override
@@ -193,11 +130,13 @@ public class Vector {
         StringBuilder sb = new StringBuilder();
 
         sb.append("{");
+        int n = getSize();
         for (int i = 0; i < n; i++) {
             sb.append(components[i]);
             sb.append(", ");
         }
         sb.deleteCharAt(sb.lastIndexOf(","));
+        sb.deleteCharAt(sb.lastIndexOf(" "));
         sb.append("}");
 
         return sb.toString();
@@ -205,14 +144,7 @@ public class Vector {
 
     @Override
     public int hashCode() {
-        final int prime = 13;
-        int hash = 1;
-
-        for (int i = 0; i < n; i++) {
-            hash = prime * hash + Double.hashCode(components[i]);
-        }
-
-        return hash;
+        return Arrays.hashCode(components);
     }
 
     @Override
@@ -227,10 +159,11 @@ public class Vector {
 
         Vector vector = (Vector) o;
 
-        if (n != vector.n) {
+        if (getSize() != vector.getSize()) {
             return false;
         }
 
+        int n = getSize();
         for (int i = 0; i < n; i++) {
             if (components[i] != vector.components[i]) {
                 return false;
