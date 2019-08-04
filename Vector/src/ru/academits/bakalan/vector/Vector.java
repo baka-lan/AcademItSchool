@@ -59,9 +59,9 @@ public class Vector {
 
     public double getLength() {
         double sum = 0;
-        int n = getSize();
-        for (int i = 0; i < n; i++) {
-            sum += components[i] * components[i];
+        for (double e:
+             components) {
+            sum += e * e;
         }
         return Math.sqrt(sum);
     }
