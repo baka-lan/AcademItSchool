@@ -30,10 +30,6 @@ public class Vector {
             throw new IllegalArgumentException("n must be > 0");
         }
 
-        if (components.length < 1) {
-            throw new IllegalArgumentException("double[].length must be > 0");
-        }
-
         this.components = Arrays.copyOf(components, n);
     }
 
@@ -59,8 +55,7 @@ public class Vector {
 
     public double getLength() {
         double sum = 0;
-        for (double e:
-             components) {
+        for (double e: components) {
             sum += e * e;
         }
         return Math.sqrt(sum);
@@ -70,6 +65,11 @@ public class Vector {
         int n = getSize();
         int vn = v.getSize();
 
+        if (n < vn) {
+            components = Arrays.copyOf(components, vn);
+            n = getSize();
+        }
+
         for (int i = 0; i < (n >= vn ? vn : n); i++) {
             components[i] += v.components[i];
         }
@@ -78,6 +78,11 @@ public class Vector {
     public void minus(Vector v) {
         int n = getSize();
         int vn = v.getSize();
+
+        if (n < vn) {
+            components = Arrays.copyOf(components, vn);
+            n = getSize();
+        }
 
         for (int i = 0; i < (n >= vn ? vn : n); i++) {
             components[i] -= v.components[i];
@@ -97,20 +102,14 @@ public class Vector {
     }
 
     public static Vector sum(Vector v1, Vector v2) {
-        Vector vector = new Vector(Math.max(v1.getSize(), v2.getSize()));
-
-        vector.plus(v1);
+        Vector vector = new Vector(v1);
         vector.plus(v2);
-
         return vector;
     }
 
     public static Vector difference(Vector v1, Vector v2) {
-        Vector vector = new Vector(Math.max(v1.getSize(), v2.getSize()));
-
-        vector.plus(v1);
+        Vector vector = new Vector(v1);
         vector.minus(v2);
-
         return vector;
     }
 
@@ -135,8 +134,7 @@ public class Vector {
             sb.append(components[i]);
             sb.append(", ");
         }
-        sb.deleteCharAt(sb.lastIndexOf(","));
-        sb.deleteCharAt(sb.lastIndexOf(" "));
+        sb.delete(sb.length() - 2, sb.length());
         sb.append("}");
 
         return sb.toString();
