@@ -13,10 +13,6 @@ public class Triangle implements Shape {
     private double b;
     private double c;
 
-    private static double getSegmentLength(double x1, double y1, double x2, double y2) {
-        return Math.sqrt(Math.pow((x1 - x2), 2) + Math.pow((y1 - y2), 2));
-    }
-
     public Triangle(double x1, double y1, double x2, double y2, double x3, double y3) {
         this.x1 = x1;
         this.y1 = y1;
@@ -27,6 +23,10 @@ public class Triangle implements Shape {
         this.a = getSegmentLength(x1, y1, x2, y2);
         this.b = getSegmentLength(x2, y2, x3, y3);
         this.c = getSegmentLength(x1, y1, x3, y3);
+    }
+
+    private static double getSegmentLength(double x1, double y1, double x2, double y2) {
+        return Math.sqrt(Math.pow((x1 - x2), 2) + Math.pow((y1 - y2), 2));
     }
 
     @Override
