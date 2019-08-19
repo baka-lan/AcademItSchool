@@ -9,6 +9,11 @@ public class List<T> {
         count = 1;
     }
 
+    public List(List<T> list) {
+        head = list.head;
+        count = list.count;
+    }
+
     public int getCount() {
         return count;
     }
@@ -87,6 +92,61 @@ public class List<T> {
         prev.setNext(new ListItem<>(data, p));
         count++;
     }
+
+    public boolean delete(T data) {
+        if (head.getData().equals(data)) {
+            head = head.getNext();
+            count--;
+            return true;
+        }
+        ListItem<T> prev = head;
+        for (ListItem<T> p = head.getNext(); p != null; prev = p, p = p.getNext()) {
+            if (p.getData().equals(data)) {
+                prev.setNext(p.getNext());
+                count--;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void reverse() {
+        if (head.getNext() != null) {
+            ListItem<T> prev = head.getNext();
+
+            head.setNext(null);
+
+            ListItem<T> p = prev.getNext();
+            prev.setNext(head);
+
+            while (p != null) {
+                ListItem<T> next = p.getNext();
+
+                p.setNext(prev);
+                if (next == null) {
+                    head = p;
+                }
+
+                prev = p;
+                p = next;
+            }
+        }
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("{");
+        for (ListItem<T> p = head; p != null; p = p.getNext()) {
+            sb.append(p);
+            sb.append(", ");
+        }
+        sb.delete(sb.length() - 2, sb.length());
+        sb.append("}");
+
+        return sb.toString();
+    }
 }
 
 /*
@@ -103,11 +163,11 @@ public class List<T> {
 
 · вставка элемента по индексу - done
 
-· удаление узла по значению, пусть выдает true, если элемент был удален
+· удаление узла по значению, пусть выдает true, если элемент был удален - done
 
 · удаление первого элемента, пусть выдает значение элемента - done
 
-· разворот списка за линейное время
+· разворот списка за линейное время - done
 
-· копирование списка
+· копирование списка - not done
  */

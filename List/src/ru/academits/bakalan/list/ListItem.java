@@ -1,28 +1,38 @@
 package ru.academits.bakalan.list;
 
-public class ListItem<T> {
+class ListItem<T> {
     private T data;
     private ListItem<T> next;
 
-    public ListItem(T data) {
+    ListItem(T data) {
         this.data = data;
     }
-    public ListItem(T data, ListItem<T> next) {
+    ListItem(T data, ListItem<T> next) {
         this.data = data;
         this.next = next;
     }
+    ListItem(ListItem<T> p) {
+        this.data = p.data;
+        this.next = p.next;
+    }
 
-    public T getData() {
+    T getData() {
         return data;
     }
-    public void setData(T data) {
+    void setData(T data) {
         this.data = data;
     }
 
-    public ListItem<T> getNext() {
+    ListItem<T> getNext() {
         return next;
     }
-    public void setNext(ListItem<T> next){
+
+    void setNext(ListItem<T> next){
         this.next = next;
+    }
+
+    @Override
+    public String toString() {
+        return data.toString();
     }
 }
