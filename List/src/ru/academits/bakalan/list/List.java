@@ -10,8 +10,20 @@ public class List<T> {
     }
 
     public List(List<T> list) {
-        head = list.head;
+        head = new ListItem<>(list.getHead());
+
+        ListItem<T> previous = list.head;
+        ListItem<T> newPrevious = head;
         count = list.count;
+
+        while (previous.getNext() != null) {
+            ListItem<T> current = previous.getNext();
+            ListItem<T> copyCurrent = new ListItem<>(current.getData());
+            newPrevious.setNext(copyCurrent);
+
+            previous = current;
+            newPrevious = copyCurrent;
+        }
     }
 
     public int getCount() {
@@ -39,11 +51,11 @@ public class List<T> {
             throw new IndexOutOfBoundsException();
         }
 
-        ListItem<T> p = head;
+        ListItem<T> current = head;
         for (int i = 0; i < index; i++) {
-            p = p.getNext();
+            current = current.getNext();
         }
-        return p.getData();
+        return current.getData();
     }
 
     public T set(int index, T data) {
@@ -51,12 +63,12 @@ public class List<T> {
             throw new IndexOutOfBoundsException();
         }
 
-        ListItem<T> p = head;
+        ListItem<T> current = head;
         for (int i = 0; i < index; i++) {
-            p = p.getNext();
+            current = current.getNext();
         }
-        T oldValue = p.getData();
-        p.setData(data);
+        T oldValue = current.getData();
+        current.setData(data);
 
         return oldValue;
     }
@@ -66,30 +78,30 @@ public class List<T> {
             throw new IndexOutOfBoundsException();
         }
 
-        ListItem<T> p = head.getNext();
-        ListItem<T> prev = head;
+        ListItem<T> current = head.getNext();
+        ListItem<T> previous = head;
         for (int i = 1; i < index; i++) {
-            prev = p;
-            p = p.getNext();
+            previous = current;
+            current = current.getNext();
         }
-        prev.setNext(p.getNext());
+        previous.setNext(current.getNext());
         count--;
 
-        return p.getData();
+        return current.getData();
     }
 
     public void add(int index, T data) {
-        if (index == 0 || index >= count) {
+        if (index == 0 || index > count) {
             throw new IndexOutOfBoundsException();
         }
 
-        ListItem<T> p = head.getNext();
-        ListItem<T> prev = head;
+        ListItem<T> current = head.getNext();
+        ListItem<T> previous = head;
         for (int i = 1; i < index; i++) {
-            prev = p;
-            p = p.getNext();
+            previous = current;
+            current = current.getNext();
         }
-        prev.setNext(new ListItem<>(data, p));
+        previous.setNext(new ListItem<>(data, current));
         count++;
     }
 
@@ -99,10 +111,10 @@ public class List<T> {
             count--;
             return true;
         }
-        ListItem<T> prev = head;
-        for (ListItem<T> p = head.getNext(); p != null; prev = p, p = p.getNext()) {
-            if (p.getData().equals(data)) {
-                prev.setNext(p.getNext());
+        ListItem<T> previous = head;
+        for (ListItem<T> current = head.getNext(); current != null; previous = current, current = current.getNext()) {
+            if (current.getData().equals(data)) {
+                previous.setNext(current.getNext());
                 count--;
                 return true;
             }
@@ -112,23 +124,23 @@ public class List<T> {
 
     public void reverse() {
         if (head.getNext() != null) {
-            ListItem<T> prev = head.getNext();
+            ListItem<T> previous = head.getNext();
 
             head.setNext(null);
 
-            ListItem<T> p = prev.getNext();
-            prev.setNext(head);
+            ListItem<T> current = previous.getNext();
+            previous.setNext(head);
 
-            while (p != null) {
-                ListItem<T> next = p.getNext();
+            while (current != null) {
+                ListItem<T> next = current.getNext();
 
-                p.setNext(prev);
+                current.setNext(previous);
                 if (next == null) {
-                    head = p;
+                    head = current;
                 }
 
-                prev = p;
-                p = next;
+                previous = current;
+                current = next;
             }
         }
     }
@@ -138,8 +150,8 @@ public class List<T> {
         StringBuilder sb = new StringBuilder();
 
         sb.append("{");
-        for (ListItem<T> p = head; p != null; p = p.getNext()) {
-            sb.append(p);
+        for (ListItem<T> current = head; current != null; current = current.getNext()) {
+            sb.append(current);
             sb.append(", ");
         }
         sb.delete(sb.length() - 2, sb.length());
@@ -169,5 +181,5 @@ public class List<T> {
 
 · разворот списка за линейное время - done
 
-· копирование списка - not done
+· копирование списка - done
  */
