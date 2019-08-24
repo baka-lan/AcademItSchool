@@ -55,36 +55,34 @@ public class Vector {
 
     public double getLength() {
         double sum = 0;
-        for (double e: components) {
+        for (double e : components) {
             sum += e * e;
         }
         return Math.sqrt(sum);
     }
 
     public void plus(Vector v) {
-        int n = getSize();
-        int vn = v.getSize();
+        int firstVectorSize = getSize();
+        int secondVectorSize = v.getSize();
 
-        if (n < vn) {
-            components = Arrays.copyOf(components, vn);
-            n = getSize();
+        if (firstVectorSize < secondVectorSize) {
+            components = Arrays.copyOf(components, secondVectorSize);
         }
 
-        for (int i = 0; i < (n >= vn ? vn : n); i++) {
+        for (int i = 0; i < secondVectorSize; i++) {
             components[i] += v.components[i];
         }
     }
 
     public void minus(Vector v) {
-        int n = getSize();
-        int vn = v.getSize();
+        int firstVectorSize = getSize();
+        int secondVectorSize = v.getSize();
 
-        if (n < vn) {
-            components = Arrays.copyOf(components, vn);
-            n = getSize();
+        if (firstVectorSize < secondVectorSize) {
+            components = Arrays.copyOf(components, secondVectorSize);
         }
 
-        for (int i = 0; i < (n >= vn ? vn : n); i++) {
+        for (int i = 0; i < secondVectorSize; i++) {
             components[i] -= v.components[i];
         }
     }
@@ -129,9 +127,8 @@ public class Vector {
         StringBuilder sb = new StringBuilder();
 
         sb.append("{");
-        int n = getSize();
-        for (int i = 0; i < n; i++) {
-            sb.append(components[i]);
+        for (double e : components) {
+            sb.append(e);
             sb.append(", ");
         }
         sb.delete(sb.length() - 2, sb.length());
