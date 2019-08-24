@@ -7,14 +7,16 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) throws FileNotFoundException {
-        String inputFilePath = "./ArrayListHome/text.txt";
+    public static void main(String[] args) {
+        String inputFilePath = "./ArrayListHome/t1ext.txt";
         ArrayList<String> fileStrings = new ArrayList<>();
 
         try (Scanner scanner = new Scanner(new FileInputStream(inputFilePath))) {
             while (scanner.hasNextLine()) {
                 fileStrings.add(scanner.nextLine());
             }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
 
         System.out.println(fileStrings);
