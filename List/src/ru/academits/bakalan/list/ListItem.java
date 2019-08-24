@@ -7,10 +7,12 @@ class ListItem<T> {
     ListItem(T data) {
         this.data = data;
     }
+
     ListItem(T data, ListItem<T> next) {
         this.data = data;
         this.next = next;
     }
+
     ListItem(ListItem<T> p) {
         this.data = p.data;
         this.next = p.next;
@@ -19,6 +21,7 @@ class ListItem<T> {
     T getData() {
         return data;
     }
+
     void setData(T data) {
         this.data = data;
     }
@@ -27,12 +30,16 @@ class ListItem<T> {
         return next;
     }
 
-    void setNext(ListItem<T> next){
+    void setNext(ListItem<T> next) {
         this.next = next;
     }
 
     @Override
     public String toString() {
+        if (data == null) {
+            return "";
+        }
+
         return data.toString();
     }
 }

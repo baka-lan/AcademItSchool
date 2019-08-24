@@ -10,6 +10,14 @@ public class List<T> {
     }
 
     public List(List<T> list) {
+        if (list == null) {
+            throw new NullPointerException("Переданный список = null");
+        }
+
+        if (list.head == null) {
+            throw new NullPointerException("Переданный список пуст");
+        }
+
         head = new ListItem<>(list.getHead());
 
         ListItem<T> previous = list.head;
@@ -31,10 +39,18 @@ public class List<T> {
     }
 
     public T getHead() {
+        if (head == null) {
+            throw new NullPointerException("Список пуст");
+        }
+
         return head.getData();
     }
 
     public T deleteHead() {
+        if (head == null) {
+            throw new NullPointerException("Список уже пуст");
+        }
+
         T value = head.getData();
         head = head.getNext();
         count--;
@@ -46,27 +62,39 @@ public class List<T> {
         count++;
     }
 
-    public T get(int index) {
-        if (index >= count) {
-            throw new IndexOutOfBoundsException();
+    private void indexCheck(int index) {
+        if (index < 0 || index >= count) {
+            throw new IndexOutOfBoundsException("В списке нет элемента с переданным индексом");
         }
+    }
+
+    private ListItem<T> listIterator(int index) {
+        indexCheck(index);
 
         ListItem<T> current = head;
+
         for (int i = 0; i < index; i++) {
             current = current.getNext();
         }
-        return current.getData();
+        return current;
+    }
+
+    private ListItem<T> uncheckableListIterator(int index) {
+        ListItem<T> current = head;
+
+        for (int i = 0; i < index; i++) {
+            current = current.getNext();
+        }
+        return current;
+    }
+
+    public T get(int index) {
+        return listIterator(index).getData();
     }
 
     public T set(int index, T data) {
-        if (index >= count) {
-            throw new IndexOutOfBoundsException();
-        }
+        ListItem<T> current = listIterator(index);
 
-        ListItem<T> current = head;
-        for (int i = 0; i < index; i++) {
-            current = current.getNext();
-        }
         T oldValue = current.getData();
         current.setData(data);
 
@@ -74,16 +102,15 @@ public class List<T> {
     }
 
     public T delete(int index) {
-        if (index == 0 || index >= count) {
-            throw new IndexOutOfBoundsException();
+        indexCheck(index);
+
+        if (index == 0) {
+            this.deleteHead();
         }
 
-        ListItem<T> current = head.getNext();
-        ListItem<T> previous = head;
-        for (int i = 1; i < index; i++) {
-            previous = current;
-            current = current.getNext();
-        }
+        ListItem<T> previous = uncheckableListIterator(index - 1);
+        ListItem<T> current = previous.getNext();
+
         previous.setNext(current.getNext());
         count--;
 
@@ -91,29 +118,35 @@ public class List<T> {
     }
 
     public void add(int index, T data) {
-        if (index == 0 || index > count) {
-            throw new IndexOutOfBoundsException();
+        if (index < 0 || index > count) {
+            throw new IndexOutOfBoundsException("Переданный индекс меньше нуля, либо больше количества элементов списка");
         }
 
-        ListItem<T> current = head.getNext();
-        ListItem<T> previous = head;
-        for (int i = 1; i < index; i++) {
-            previous = current;
-            current = current.getNext();
+        if (index == 0) {
+            this.addNewHead(data);
+            return;
         }
-        previous.setNext(new ListItem<>(data, current));
+
+        ListItem<T> previous = uncheckableListIterator(index - 1);
+
+        previous.setNext(new ListItem<>(data, previous.getNext()));
         count++;
     }
 
-    public boolean delete(T data) {
-        if (head.getData().equals(data)) {
+    private boolean deleteNullDataElement() {
+        if (head == null) {
+            throw new NullPointerException("Список уже пуст");
+        }
+
+        if (head.getData() == null) {
             head = head.getNext();
             count--;
             return true;
         }
+
         ListItem<T> previous = head;
         for (ListItem<T> current = head.getNext(); current != null; previous = current, current = current.getNext()) {
-            if (current.getData().equals(data)) {
+            if (current.getData() == null) {
                 previous.setNext(current.getNext());
                 count--;
                 return true;
@@ -122,26 +155,55 @@ public class List<T> {
         return false;
     }
 
-    public void reverse() {
-        if (head.getNext() != null) {
-            ListItem<T> previous = head.getNext();
+    public boolean delete(T data) {
+        if (data == null) {
+            return deleteNullDataElement();
+        }
 
-            head.setNext(null);
+        if (head.getData().equals(data)) {
+            head = head.getNext();
+            count--;
+            return true;
+        }
 
-            ListItem<T> current = previous.getNext();
-            previous.setNext(head);
-
-            while (current != null) {
-                ListItem<T> next = current.getNext();
-
-                current.setNext(previous);
-                if (next == null) {
-                    head = current;
-                }
-
-                previous = current;
-                current = next;
+        ListItem<T> previous = head;
+        for (ListItem<T> current = head.getNext(); current != null; previous = current, current = current.getNext()) {
+            if (current.getData().equals(data)) {
+                previous.setNext(current.getNext());
+                count--;
+                return true;
             }
+        }
+
+        return false;
+    }
+
+    public void reverse() {
+        if (head == null) {
+            throw new NullPointerException("Список пуст");
+        }
+
+        if (head.getNext() == null) {
+            return;
+        }
+
+        ListItem<T> previous = head.getNext();
+
+        head.setNext(null);
+
+        ListItem<T> current = previous.getNext();
+        previous.setNext(head);
+
+        while (current != null) {
+            ListItem<T> next = current.getNext();
+
+            current.setNext(previous);
+            if (next == null) {
+                head = current;
+            }
+
+            previous = current;
+            current = next;
         }
     }
 
