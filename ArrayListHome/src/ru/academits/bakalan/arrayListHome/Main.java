@@ -16,7 +16,7 @@ public class Main {
                 fileStrings.add(scanner.nextLine());
             }
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            System.out.println("файл " + inputFilePath + " не найден");
         }
 
         System.out.println(fileStrings);
